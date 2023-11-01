@@ -1,5 +1,5 @@
 import Config from "@/components/Config";
-// import Footer from "@/components/Footer";
+import Footer from "@/components/Footer";
 import { getStoryblokApi } from "@storyblok/react/rsc";
 import StoryblokStory from "@storyblok/react/story";
 
@@ -20,7 +20,7 @@ export default async function Page({ params }) {
       <div className="min-h-screen">
         <StoryblokStory story={data.story} full_slug={data.story?.full_slug} />
       </div>
-      {/* <Footer blok={config?.story?.content} /> */}
+      <Footer blok={config?.story?.content} />
     </div>
   );
 }
@@ -36,10 +36,12 @@ export const generateMetadata = async ({ params }) => {
     cv: Math.random(),
   });
   // console.log("==>", data?.story?.content?.seo[0]);
-  // const hasSEOdata = data?.story?.content?.seo
-  // return {
-  //   title: hasSEOdata ? data?.story?.content?.seo[0]?.site_title : "Zamaripa",
-  //   description: hasSEOdata ? data?.story?.content?.seo[0]?.site_description : "Zamaripa",
+  const hasSEOdata = data?.story?.content?.seo;
+  return {
+    title: hasSEOdata ? data?.story?.content?.seo[0]?.site_title : "Supercell Group",
+    description: hasSEOdata
+      ? data?.story?.content?.seo[0]?.site_description
+      : "Supercell Group",
     // openGraph: {
     //   title: data?.story?.content?.seo ? data?.story?.content?.seo[0]?.og_title : "Zamaripa",
     //   description: hasSEOdata ? data?.story?.content?.seo[0]?.og_description : "Zamaripa",
@@ -58,9 +60,8 @@ export const generateMetadata = async ({ params }) => {
     //     { url: '/apple-touch-icon.png' }
     //   ]
     // },
-//   };
+  };
 };
-
 
 export async function generateStaticParams() {
   const storyblokApi = getStoryblokApi();

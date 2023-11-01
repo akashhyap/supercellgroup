@@ -7,7 +7,7 @@ import { render } from "storyblok-rich-text-react-renderer";
 const Footer = ({ blok }) => {
   // console.log("footer", blok);
   return (
-    <div className="footer bg-[#d9bca9] pt-9">
+    <div className="footer bg-gray-100 pt-9">
       <div className="md:max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex flex-wrap justify-between items-center">
           <div className="relative">

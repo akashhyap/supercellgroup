@@ -97,7 +97,7 @@ const MenuLink = ({ blok, closeMenu }) => {
           </Popover>
         </>
       ) : (
-        <div className="relative text-left hidden md:inline-block z-10">
+        <div className="relative text-left z-10">
           <Link
             href={`/${blok.link.cached_url}`}
             className="menulinks text-lg md:text-base mb-4 md:mb-0 font-medium text-black hover:text-gray-900"

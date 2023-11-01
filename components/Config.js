@@ -99,8 +99,8 @@ const Config = ({ blok }) => {
                   {blok?.logo ? (
                     <img
                       src={blok?.logo?.filename}
-                      alt="TrustSEO"
-                      className="h-full object-cove"
+                      alt="Supercell Group"
+                      className="h-full object-cover"
                       width={180}
                       height={150}
                     />
