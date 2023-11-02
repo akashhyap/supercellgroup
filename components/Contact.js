@@ -3,13 +3,47 @@
 import { useForm } from "react-hook-form";
 import { sendEmail } from "@/utils/send-email";
 import { StoryblokComponent, storyblokEditable } from "@storyblok/react";
+import { useState } from "react";
 
 const Contact = ({ blok }) => {
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSent, setIsSent] = useState(false);
+  const [responseMessage, setResponseMessage] = useState("");
+  const [isError, setIsError] = useState(false);
 
-  function onSubmit(data) {
-    sendEmail(data);
+  async function onSubmit(data) {
+    setIsLoading(true);
+    setIsError(false);
+    try {
+      const response = await sendEmail(data);
+      if (response && response.message) {
+        setResponseMessage(response.message);
+        setIsSent(true);
+        reset(); // Reset the form fields
+        setTimeout(() => {
+          setIsSent(false); // Remove the success message after a delay
+          setResponseMessage(""); // Clear the response message
+        }, 5000); // 5 seconds delay
+      } else {
+        setResponseMessage(
+          "Email sent, but no message returned from the server."
+        );
+      }
+    } catch (error) {
+      setIsError(true);
+      setResponseMessage(
+        error.message || "An error occurred while sending the email."
+      );
+    }
+    setIsLoading(false);
   }
+
   const inlineStyle = {
     paddingTop: blok?.paddingTop,
     paddingBottom: blok?.paddingBottom,
@@ -43,6 +77,13 @@ const Contact = ({ blok }) => {
             className="w-full rounded-md border border-gray-300 bg-white py-3 px-6 text-base font-medium text-gray-700 outline-none focus:border-black focus:shadow-md"
             {...register("name", { required: true })}
           />
+          <div>
+            {errors?.name && (
+              <p className="text-red-500 text-sm mt-2">
+                Full name is required!
+              </p>
+            )}
+          </div>
         </div>
         <div className="mb-5">
           <label
@@ -57,6 +98,11 @@ const Contact = ({ blok }) => {
             className="w-full rounded-md border border-gray-300 bg-white py-3 px-6 text-base font-medium text-gray-700 outline-none focus:border-black focus:shadow-md"
             {...register("email", { required: true })}
           />
+          <div>
+            {errors?.email && (
+              <p className="text-red-500 text-sm mt-2">Email is required!</p>
+            )}
+          </div>
         </div>
         <div className="mb-5">
           <label
@@ -73,9 +119,17 @@ const Contact = ({ blok }) => {
           ></textarea>
         </div>
         <div>
-          <button className="hover:shadow-form rounded-md bg-black py-3 px-8 text-base font-semibold text-white outline-none">
-            Submit
-          </button>
+          {isLoading ? (
+            <p>Loading...</p>
+          ) : isSent ? (
+            <p className={`text-green-500 ${isError ? "text-red-500" : ""}`}>
+              {responseMessage}
+            </p>
+          ) : (
+            <button className="hover:shadow-form rounded-md bg-black py-3 px-8 text-base font-semibold text-white outline-none">
+              Submit
+            </button>
+          )}
         </div>
       </form>
     </div>
